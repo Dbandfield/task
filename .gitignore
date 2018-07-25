@@ -1,2 +1,9 @@
 # editor detritus
 .vscode/
+
+#binaries
+*.pyc
+__pycache__/
+
+#virtual env
+venv/
