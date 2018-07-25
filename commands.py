@@ -1,39 +1,70 @@
 import display
+import data
+
 from time import sleep
 import sys
 from datetime import datetime
 
 def start(_taskName):
 
-    elements = {}
+    lastTime = 0
+    delta = 0
+    timer = 0
+    dateText = "0"
 
     header = "You have been doing " + _taskName + " for "
+    headerText = display.TextElement(header, 0)
+    timeText = display.TextElement(dateText, 1)
+    break1 = display.TextElement("", 2)
+    status = display.TextElement("RECORDING", 3)
+    break2 = display.TextElement("", 4)
 
-    elements['header'] = display.TextElement(header, 0, 3)
+    instrTextEnter = "Press ENTER to end task and save"
+    instrTextP = "Press p to pause task"
+    instrTextQ = "Press q to exit without saving task"
+
+    instr1 = display.TextElement(instrTextEnter, 5)
+    instr2 = display.TextElement(instrTextP, 6)
+    instr3 = display.TextElement(instrTextQ, 7)
+
+    elements = [headerText, timeText, break1, status, break2, instr1, instr2, instr3]
+    elements.sort()
 
     screen = display.init()
 
     display.update(screen, elements)
 
-    startTime = datetime.now()
-    delta = datetime.now() - startTime
+    paused = False
 
-    dateText = str(delta)
-    elements['time'] = display.TextElement(dateText, 0, 4)
+    lastTime = datetime.now()
 
     while(True):
 
-        delta = datetime.now() - startTime
-        minutes = str(int(delta.total_seconds() / 60))
-        minutes = minutes + " minutes"
+        delta = datetime.now() - lastTime
+        lastTime = datetime.now()
+        if not paused:
+            timer += delta.total_seconds()
+            minutes = str(int(timer))
+            minutes = minutes + " minutes"
 
-        elements['time'].txt = minutes
+        timeText.txt = minutes
 
         display.update(screen, elements)
 
         inp = display.run(screen)
 
         if inp in ('q', 'Q'):
+            display.end(screen)
+            sys.exit(0)
+        elif inp in ('p', 'P'):
+            if paused:
+                status.txt = 'RECORDING'
+                paused = False
+            else:
+                status.txt = 'PAUSED'
+                paused = True
+        elif inp in ('KEY_ENTER', '\n', '\r'):
+            data.storeTask("task", 0)
             display.end(screen)
             sys.exit(0)
 
