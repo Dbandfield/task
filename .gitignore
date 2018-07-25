@@ -1,2 +1,5 @@
 # editor detritus
 .vscode/
+
+#binaries
+*.pyc
