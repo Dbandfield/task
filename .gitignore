@@ -10,3 +10,9 @@ venv/
 
 # testing
 .pytest_cache/
+
+#data
+data/
+
+#logging
+*.log

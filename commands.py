@@ -1,5 +1,5 @@
 import display
-import data
+import database
 
 from time import sleep
 import sys
@@ -44,10 +44,10 @@ def start(_taskName):
         lastTime = datetime.now()
         if not paused:
             timer += delta.total_seconds()
-            minutes = str(int(timer))
-            minutes = minutes + " minutes"
+            minutes = int(timer)
+            minutesTxt = str(minutes) + " minutes"
 
-        timeText.txt = minutes
+        timeText.txt = minutesTxt
 
         display.update(screen, elements)
 
@@ -64,7 +64,9 @@ def start(_taskName):
                 status.txt = 'PAUSED'
                 paused = True
         elif inp in ('KEY_ENTER', '\n', '\r'):
-            data.storeTask("task", 0)
+
+            taskObj = database.TaskData(_taskName, minutes)
+            database.storeTask(taskObj)
             display.end(screen)
             sys.exit(0)
 
