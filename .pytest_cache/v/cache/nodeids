@@ -1,0 +1,8 @@
+[
+  "tests/test_display.py::test_initDisplay",
+  "tests/test_display.py::test_end",
+  "tests/test_display.py::test_title",
+  "tests/test_display.py::test_update",
+  "tests/test_task.py::test_arguments_start",
+  "tests/test_task.py::test_arguments_none"
+]

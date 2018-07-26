@@ -1,6 +1,6 @@
 import curses
 
-def init():
+def initDisplay():
     scr = curses.initscr()
     curses.noecho()
     curses.cbreak()
@@ -8,7 +8,6 @@ def init():
     scr.nodelay(True)
 
     title(scr)
-
     return scr
 
 def end(scr):
