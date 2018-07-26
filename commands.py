@@ -7,6 +7,8 @@ from datetime import datetime
 
 def start(_taskName):
 
+    database.initDirectories()
+
     lastTime = 0
     delta = 0
     timer = 0

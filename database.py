@@ -1,11 +1,18 @@
 import sqlite3
 import datetime
+import os
 import logging
 
-DBNAME = "data/task.db"
+THIS_DIR = os.path.dirname(os.path.realpath(__file__))
+DATA_DIR = os.path.join(THIS_DIR, "data")
+DBNAME = os.path.join(DATA_DIR, 'task.db')
 
 LOG_FORMAT = '%(asctime)-15s %(message)s'
 logging.basicConfig(level=logging.DEBUG, filename="task.log", format=LOG_FORMAT)
+
+def initDirectories():
+    if not os.path.isdir(DATA_DIR):
+        os.mkdir(DATA_DIR)
 
 def connect():
     return sqlite3.connect(DBNAME)
