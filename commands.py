@@ -30,7 +30,7 @@ def start(_taskName):
     elements = [headerText, timeText, break1, status, break2, instr1, instr2, instr3]
     elements.sort()
 
-    screen = display.init()
+    screen = display.initDisplay()
 
     display.update(screen, elements)
 
