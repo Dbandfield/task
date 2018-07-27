@@ -2,13 +2,13 @@
 
 set -eo pipefail
 
-function global_install
+function install_global_deps
 {
-    pip install virtualenv
+    sudo pip install virtualenv
     virtualenv venv
 }
 
-function local_install
+function install_local_deps
 {
     source venv/bin/activate
     pip install -r requirements.txt
