@@ -4,7 +4,9 @@
 
 This is a test application written in Python which keeps track of how much time you spend on tasks.
 
-## Dependencies
+## Requirements
+
+This has only been tested on Arch Linux 64bit. It should work on Mac, but probably will not work on Windows (because of the bash scripts and the curses library).
 
 * Python 3 [Get it here](https://www.python.org/getit/)
 * virtualenv. This allows packages to be installed local to a project. Run `./util.sh install_global_dependencies` to install it. This uses `sudo`, so feel free to take a look at the file before running it.
@@ -31,8 +33,9 @@ There are four commands
 
 ### start
 
-`./tasklog.py start <TASK_NAME>`
-<TASK_NAME> is the name of the task you want to track. It can be any string, within reason.
+`./tasklog.py start [TASK_NAME]`
+
+[TASK_NAME] is the name of the task you want to track. It can be any string, within reason.
 
 A display will appear with a clock that counts up. You can:
 
@@ -42,9 +45,9 @@ A display will appear with a clock that counts up. You can:
 
 #### Example
 
-`./tasklog.py start emails`
-`./tasklog.py start coding`
-`./tasklog.py start procrastination`
+`./tasklog.py start emails`\
+`./tasklog.py start coding`\
+`./tasklog.py start procrastination`\
 
 ### ls
 
@@ -54,30 +57,30 @@ Prints out which days you have recorded tasks on.
 
 ### show
 
-`./tasklog.py show <DATE>`
+`./tasklog.py show [DATE]`
 
 Shows details of what tasks you did on a day, and how long you spent on them.
 
-<DATE> is an optional argument of the format `DD/MM/YYYY`, specifying which day you want to show details of. If you omit it, it will show details about todays tasks
+[DATE] is an optional argument of the format `DD/MM/YYYY`, specifying which day you want to show details of. If you omit it, it will show details about todays tasks
 
 #### Example
 
-`./tasklog show`
-`./tasklog show 19/07/2018`
-`./tasklog show 01/11/1973`
+`./tasklog show`\
+`./tasklog show 19/07/2018`\
+`./tasklog show 01/11/1973`\
 
 ### rm
 
-`./tasklog.py rm <DATE>`
+`./tasklog.py rm [DATE]`
 
 This removes from file details about the specified day.
 
-<DATE> is required and is in the format `DD/MM/YYYY`. It specifies which day you want to remove.
+[DATE] is required and is in the format `DD/MM/YYYY`. It specifies which day you want to remove.
 
 #### Example
 
-`./tasklog rm 19/07/2018`
-`./tasklog rm 01/11/1973`
+`./tasklog rm 19/07/2018`\
+`./tasklog rm 01/11/1973`\
 
 ## Testing
 
