@@ -76,3 +76,77 @@ def start(_taskName):
 
     display.endCurses(screen)
 
+def ls():
+
+    days = database.getDays()
+
+    for d in days:
+        print(d)
+
+def show(dateStr=None):
+
+    print(dateStr)
+    if dateStr is None:
+        date = datetime.now().date()
+    else:
+        try:
+            date = datetime.strptime(dateStr, "%d/%m/%Y").date()
+        except ValueError as err:
+            print("Date format must be as follows: DD/MM/YYYY")
+            sys.exit(1)
+
+    today = date == datetime.now().date()
+
+    tasks = database.getDateTasks(date)
+
+    elements = []
+    prio = 0
+
+    if today:
+        headerStart = "Today "
+    else:
+        headerStart = "On " + date.strftime("%d/%m/%Y") + " "
+
+    header = (headerStart + "you did the following tasks: ")
+    headerText = display.TextElement(header, prio)
+    prio += 1
+    elements.append(headerText)
+
+    break1 = display.TextElement("", prio)
+    prio += 1
+    elements.append(break1)
+
+    for t in tasks:
+        txt = t.name + " for " + str(t.time) + " minutes"
+        elements.append(display.TextElement(txt, prio))
+        prio += 1
+
+    break2 = display.TextElement("", prio)
+    prio += 1
+    elements.append(break2)
+
+    instrTextEnter = "Press q or ENTER to exit"
+    instr1 = display.TextElement(instrTextEnter, prio)
+    elements.append(instr1)
+
+    elements.sort()
+
+    screen = display.initDisplay()
+
+    display.update(screen, elements)
+
+    while(True):
+
+        display.update(screen, elements)
+
+        inp = display.run(screen)
+
+        if inp in ('KEY_ENTER', '\n', '\r', 'q', 'Q'):
+            display.end(screen)
+            sys.exit(0)
+
+        sleep(0.01)
+
+    display.endCurses(screen)
+
+

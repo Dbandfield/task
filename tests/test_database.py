@@ -5,6 +5,7 @@ import database
 import pytest
 import mock
 import sqlite3
+import datetime
 
 def test_initDirectories(tmpdir):
 
@@ -157,12 +158,10 @@ def test_taskExists(tmpdir):
 
     assert res
 
-def test_taskExists(tmpdir):
+def test_ensureTableExists(tmpdir):
 
     temp = tmpdir.mkdir("tmp")
-
     database.DBNAME = os.path.join(temp, 'task.db')
-
     name = database.tableName()
 
     database.ensureTableExists(name)
@@ -179,3 +178,51 @@ def test_taskExists(tmpdir):
 
 
     assert len(res) > 0
+
+def test_getDays(tmpdir):
+
+    temp = tmpdir.mkdir("tmp")
+    database.DBNAME = os.path.join(temp, 'task.db')
+    name = "DAY_01_01_2000"
+    expected = "01/01/2000"
+    cmd = ("""CREATE TABLE IF NOT EXISTS """ + name +
+            """ (id INTEGER PRIMARY KEY, taskName text, taskTime int)""")
+
+    testDB = sqlite3.connect(database.DBNAME)
+
+    with testDB:
+        cursor = testDB.cursor()
+        cursor.execute(cmd)
+    testDB.close()
+
+    res = database.getDays()
+
+    assert res[0] == expected
+
+def test_getDateTasks(tmpdir):
+
+    temp = tmpdir.mkdir("tmp")
+    database.DBNAME = os.path.join(temp, 'task.db')
+    name = "DAY_01_01_2000"
+    date = datetime.datetime.strptime(name, "DAY_%d_%m_%Y")
+    cmd1 = ("""CREATE TABLE IF NOT EXISTS """ + name +
+            """ (id INTEGER PRIMARY KEY, taskName text, taskTime int)""")
+    cmd2 = ("""INSERT INTO """ + name + 
+            """ (taskName, taskTime) VALUES(?, ?)""")
+    expectedTask = "TEST_TASK"
+    expectedTime = 10
+    cmd2Values = (expectedTask, expectedTime)
+
+    testDB = sqlite3.connect(database.DBNAME)
+
+    with testDB:
+        cursor = testDB.cursor()
+        cursor.execute(cmd1)
+        cursor.execute(cmd2, cmd2Values)
+    testDB.close()
+
+    expectedObject = database.TaskData(expectedTask,
+                                        expectedTime)
+    ret = database.getDateTasks(date)
+    assert ret[0] == expectedObject
+

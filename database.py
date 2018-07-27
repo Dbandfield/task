@@ -112,13 +112,61 @@ def ensureTableExists(name):
     with db:
         cursor = db.cursor()
         cursor.execute(cmd)
+
     db.close()
+
+def getDays():
+    cmd = "SELECT name FROM sqlite_master WHERE type='table'"
+
+    db = connect()
+    with db:
+        cursor = db.cursor()
+        cursor.execute(cmd)
+        days = cursor.fetchall()
+
+    db.close()
+
+    formattedDays = []
+
+    for d in days:
+        dt = datetime.datetime.strptime(d[0], "DAY_%d_%m_%Y")
+        formattedDays.append(dt.date().strftime("%d/%m/%Y"))
+
+    return formattedDays
+
+def getDateTasks(date=None):
+
+    if date is None:
+        date = datetime.datetime.now()
+
+    cmd = "SELECT * FROM " + date.strftime("DAY_%d_%m_%Y")
+
+    db = connect()
+    with db:
+        cursor = db.cursor()
+        cursor.execute(cmd)
+        tasks = cursor.fetchall()
+
+    db.close()
+
+    retTasks = []
+    for t in tasks:
+        retTasks.append(TaskData(t[1], t[2]))
+
+    return retTasks
 
 class TaskData:
 
     def __init__(self, name, time):
         self.name = name
         self.time = time
+
+    def __str__(self):
+        return str(self.__dict__)
+
+    def __eq__(self, other):
+        sameClass = isinstance(other, TaskData)
+        return sameClass and self.__dict__ == other.__dict__
 
 
 
