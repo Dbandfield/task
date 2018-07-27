@@ -35,6 +35,10 @@ def arguments(inArgs):
     showParser.add_argument('date', nargs='?', const='')
     showParser.set_defaults(func=show)
 
+    rmParser = subparsers.add_parser('rm')
+    rmParser.add_argument('date')
+    rmParser.set_defaults(func=rm)
+
     return argParse.parse_args(inArgs)
 
 def main():
@@ -53,6 +57,9 @@ def show(a):
     else:
         d = a.date
     commands.show(d)
+
+def rm(a):
+    commands.rm(a.date)
 
 if __name__ == '__main__':
     main()

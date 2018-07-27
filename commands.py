@@ -149,4 +149,14 @@ def show(dateStr=None):
 
     display.endCurses(screen)
 
+def rm(dateStr):
+    try:
+        date = datetime.strptime(dateStr, "%d/%m/%Y").date()
+    except ValueError as err:
+        print("Date format must be as follows: DD/MM/YYYY")
+        sys.exit(1)
+
+    database.removeDay(date)
+
+
 
