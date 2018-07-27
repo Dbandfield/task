@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+import os
+# auto-run virtualenv
+THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+activate = os.path.join(THIS_DIR, 'venv/bin/activate_this.py')
+exec(open(activate).read())
+
 # Python Core
 import sys
 
@@ -14,9 +20,9 @@ def arguments(inArgs):
     desc="""A utility for keeping track of how much time
             you have spent on tasks"""
     argParse = argparse.ArgumentParser(description=desc)
-    # argParse.add_argument('command', choices=cmd)
 
-    subparsers = argParse.add_subparsers()
+    subparsers = argParse.add_subparsers(dest='command')
+    subparsers.required = True
 
     startParser = subparsers.add_parser('start')
     startParser.add_argument('task')
@@ -36,14 +42,12 @@ def main():
     args.func(args)
 
 def start(a):
-    print("start")
     commands.start(a.task)
 
 def ls(a):
     commands.ls()
 
 def show(a):
-    print(a.date)
     if a.date == '':
         d = None
     else:

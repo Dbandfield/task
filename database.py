@@ -161,6 +161,13 @@ class TaskData:
         self.name = name
         self.time = time
 
+    def __str__(self):
+        return str(self.__dict__)
+
+    def __eq__(self, other):
+        sameClass = isinstance(other, TaskData)
+        return sameClass and self.__dict__ == other.__dict__
+
 
 
 
