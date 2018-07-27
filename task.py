@@ -11,30 +11,44 @@ import commands
 
 def arguments(inArgs):
 
-    cmd = ('start', 'show', 'ls')
-
     desc="""A utility for keeping track of how much time
             you have spent on tasks"""
     argParse = argparse.ArgumentParser(description=desc)
-    argParse.add_argument('command', choices=cmd)
-    argParse.add_argument('subcommand')
+    # argParse.add_argument('command', choices=cmd)
+
+    subparsers = argParse.add_subparsers()
+
+    startParser = subparsers.add_parser('start')
+    startParser.add_argument('task')
+    startParser.set_defaults(func=start)
+
+    lsParser = subparsers.add_parser('ls')
+    lsParser.set_defaults(func=ls)
+
+    showParser = subparsers.add_parser('show')
+    showParser.add_argument('date', nargs='?', const='')
+    showParser.set_defaults(func=show)
 
     return argParse.parse_args(inArgs)
 
 def main():
     args = arguments(sys.argv[1:])
+    args.func(args)
 
-    if args.command == 'start':
+def start(a):
+    print("start")
+    commands.start(a.task)
 
-        if not args.subcommand:
-            print("The start command requires the name of a task to start")
-            sys.exit(1)
+def ls(a):
+    commands.ls()
 
-        if not isinstance(args.subcommand, str):
-            print("The name of the task to start must be a string")
-            sys.exit(1)
-
-        commands.start(args.subcommand)
+def show(a):
+    print(a.date)
+    if a.date == '':
+        d = None
+    else:
+        d = a.date
+    commands.show(d)
 
 if __name__ == '__main__':
     main()
