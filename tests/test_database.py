@@ -226,3 +226,28 @@ def test_getDateTasks(tmpdir):
     ret = database.getDateTasks(date)
     assert ret[0] == expectedObject
 
+def test_removeDay(tmpdir):
+
+    temp = tmpdir.mkdir("tmp")
+    database.DBNAME = os.path.join(temp, 'task.db')
+    name = "DAY_01_01_2000"
+    date = datetime.datetime.strptime(name, "DAY_%d_%m_%Y")
+    cmd1 = ("""CREATE TABLE IF NOT EXISTS """ + name +
+            """ (id INTEGER PRIMARY KEY, taskName text, taskTime int)""")
+    cmd2 = ("""SELECT name FROM sqlite_master WHERE type='table'""")
+
+    testDB = sqlite3.connect(database.DBNAME)
+
+    with testDB:
+        cursor = testDB.cursor()
+        cursor.execute(cmd1)
+
+    database.removeDay(date)
+
+    with testDB:
+        cursor = testDB.cursor()
+        cursor.execute(cmd2)
+        ret = cursor.fetchall()
+    testDB.close()
+
+    assert len(ret) == 0

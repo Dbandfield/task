@@ -155,6 +155,17 @@ def getDateTasks(date=None):
 
     return retTasks
 
+def removeDay(date):
+    tableName = date.strftime("DAY_%d_%m_%Y")
+    cmd = ("""DROP TABLE IF EXISTS """ + tableName)
+
+    db = connect()
+    with db:
+        cursor = db.cursor()
+        cursor.execute(cmd)
+
+    db.close()
+
 class TaskData:
 
     def __init__(self, name, time):
