@@ -25,8 +25,8 @@ def test_init_directories(tmpdir):
 def test_connect(tmpdir):
 
     temp = tmpdir.mkdir("tmp")
-    new_dir = os.path.join(temp, 'new')
-    database.DATA_DIR = new_dir
+    database.DBNAME = os.path.join(temp, 'task.db')
+
     db = database.connect()
     assert type(db) is sqlite3.Connection
 
