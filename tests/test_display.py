@@ -1,33 +1,40 @@
+"""
+test_display.py
+
+tests for display.py
+"""
+# core
 import sys
 from os import path
-sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
-import display
-import pytest
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 import mock
 import curses
 
+# project
+import display
+
 @mock.patch('display.curses')
-def test_initDisplay(mockCurses):
+def test_init_display(mock_curses):
 
     """
-    curses.cbreak() requires terminal, it 
+    curses.cbreak() requires terminal, it
     will fail if run in the background, like when
     you run pytest
     """
-    mockCurses.cbreak.return_value = None
+    mock_curses.cbreak.return_value = None
 
-    scr = display.initDisplay()
+    scr = display.init_display()
     assert not type(scr) is None
 
 @mock.patch('display.curses')
-def test_end(mockCurses):
-    mockCurses.cbreak.return_value = None
-    mockCurses.nocbreak.return_value = None
+def test_end(mock_curses):
+    mock_curses.cbreak.return_value = None
+    mock_curses.nocbreak.return_value = None
 
-    scr = display.initDisplay()
+    scr = display.init_display()
     display.end(scr)
 
-    assert mockCurses.isendwin()
+    assert mock_curses.isendwin()
 
 def test_title():
     screen = curses.initscr()

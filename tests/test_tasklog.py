@@ -1,8 +1,18 @@
+"""
+test_tasklog.py
+
+tests for tasklog.py
+"""
+# core
 import sys
 from os import path
 sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
-import tasklog
+
+# third party
 import pytest
+
+# project
+import tasklog
 
 def test_arguments_start():
     args = tasklog.arguments(["start", "emails"])
