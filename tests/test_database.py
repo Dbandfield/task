@@ -165,6 +165,33 @@ def test_task_exists(tmpdir):
 
     assert res
 
+def test_table_exists_true(tmpdir):
+    temp = tmpdir.mkdir("tmp")
+    database.DBNAME = os.path.join(temp, 'task.db')
+    name = "DAY_01_01_2000"
+    add_table_cmd = ("""CREATE TABLE """ + name +
+                     """ (id INTEGER PRIMARY KEY,
+                     task_name text, task_time, int)""")
+
+    test_db = sqlite3.connect(database.DBNAME)
+    with test_db:
+        cursor = test_db.cursor()
+        cursor.execute(add_table_cmd)
+    test_db.close()
+
+    assert database.table_exists(name)
+
+
+def test_table_exists_false(tmpdir):
+    temp = tmpdir.mkdir("tmp")
+    database.DBNAME = os.path.join(temp, 'task.db')
+    name = database.table_name()
+
+    test_db = sqlite3.connect(database.DBNAME)
+    test_db.close()
+
+    assert not database.table_exists(name)
+
 def test_ensure_table_exists(tmpdir):
 
     temp = tmpdir.mkdir("tmp")
@@ -258,3 +285,14 @@ def test_remove_day(tmpdir):
     test_db.close()
 
     assert len(ret) == 0
+
+def test_sanitise_table_name_good():
+    good_name = "DAY_01_01_2000"
+    test_name = database.sanitise_table_name(good_name)
+    assert good_name == test_name
+
+def test_sanitise_table_name_bad():
+    bad_name = "(><?;:'~#][}{)(=+-!\"£$%^&*DAY_01_01_2000"
+    expected = "DAY_01_01_2000"
+    test_name = database.sanitise_table_name(bad_name)
+    assert test_name == expected

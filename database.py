@@ -19,6 +19,8 @@ get_task_time(task) -- return the time spent already on a task today
 
 task_exists(task) -- check if a task exists
 
+table_exists(name) -- Check if table exists
+
 ensure_table_exists(name) -- Create table, unless it exists already
 
 get_days() -- return a list of dates when tasks were recorded
@@ -27,6 +29,9 @@ get_date_tasks(date) -- return information about tasks done on
 a particular day
 
 remove_day(date) -- remove a date's task information from file
+
+sanitise_table_name(name) -- prevent sql injection by restricting
+names to _ and alphanumerics
 
 class TaskData -- a simple class to hold information on tasks.
 
@@ -119,7 +124,7 @@ def insert_or_update_task(task_name, task_time):
 def table_name():
     """ Returns a string representing today's date like this: DAY_DD_MM_YYYY """
     d = datetime.datetime.now().date()
-    return d.strftime("DAY_%d_%m_%Y")
+    return sanitise_table_name(d.strftime("DAY_%d_%m_%Y"))
 
 def get_task_time(task):
     """
@@ -175,11 +180,34 @@ def task_exists(task):
 
     return len(entry) > 0
 
+def table_exists(name):
+    """
+    Supply the name of table to check for existence
+    Returns True if it exists, False otherwise
+    """
+
+    cmd = ("""SELECT * FROM sqlite_master WHERE type='table'
+           AND name=?""")
+    val = (name,)
+
+    db = connect()
+    with db:
+        cursor = db.cursor()
+        cursor.execute(cmd, val)
+        tables = cursor.fetchall()
+
+    db.close()
+
+    return len(tables) > 0
+
+
 def ensure_table_exists(name):
     """
     Supply the name for the table as a string.
     Create the table if it does not already exist
     """
+
+    name = sanitise_table_name(name)
 
     cmd = ("""CREATE TABLE IF NOT EXISTS """ + name +
            """ (id INTEGER PRIMARY KEY, task_name text, task_time int)""")
@@ -227,24 +255,30 @@ def get_date_tasks(date=None):
     task and the time spent on it in minutes (see class below)
     """
 
+    return_tasks = []
+
+
     if date is None:
         date = datetime.datetime.now()
 
-    cmd = "SELECT * FROM " + date.strftime("DAY_%d_%m_%Y")
+    table_name = sanitise_table_name(date.strftime("DAY_%d_%m_%Y"))
 
-    db = connect()
-    with db:
-        cursor = db.cursor()
-        cursor.execute(cmd)
-        tasks = cursor.fetchall()
+    if table_exists(table_name):
 
-    db.close()
+        cmd = "SELECT * FROM " + table_name
 
-    ret_tasks = []
-    for t in tasks:
-        ret_tasks.append(TaskData(t[1], t[2]))
+        db = connect()
+        with db:
+            cursor = db.cursor()
+            cursor.execute(cmd)
+            tasks = cursor.fetchall()
 
-    return ret_tasks
+        db.close()
+
+        for t in tasks:
+            return_tasks.append(TaskData(t[1], t[2]))
+
+    return return_tasks
 
 def remove_day(date):
     """
@@ -255,7 +289,7 @@ def remove_day(date):
 
     # Dates are represented by tables of tasks
     # with the following format:
-    rm_table_name = date.strftime("DAY_%d_%m_%Y")
+    rm_table_name = sanitise_table_name(date.strftime("DAY_%d_%m_%Y"))
     # Just drop the table
     cmd = ("""DROP TABLE IF EXISTS """ + rm_table_name)
 
@@ -265,6 +299,20 @@ def remove_day(date):
         cursor.execute(cmd)
 
     db.close()
+
+def sanitise_table_name(name):
+    """
+    Provide a string candidate for a table name. 
+
+    Returns the string with all characters that are not 
+    underscore or alphanumeric removed
+
+    Because you can't pass table name variables to sqlite3 
+    commands safely in the same way as values, we need to
+    sanitise input
+    """
+
+    return ''.join(c for c in name if c.isalnum() or c is '_')
 
 class TaskData:
     """

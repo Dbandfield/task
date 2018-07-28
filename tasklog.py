@@ -96,7 +96,7 @@ def show(args):
     """
 
     # If no date supplied, set to None
-    if a.date == '':
+    if args.date == '':
         d = None
     else:
         d = args.date

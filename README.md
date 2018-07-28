@@ -31,11 +31,16 @@ If you did not install virtualenv from `util.sh` you will also need to set it up
 
 There are four commands
 
+./tasklog.py start [TASK_NAME]\
+./tasklog.py ls\
+./tasklog.py show [DATE]\
+./tasklog.py rm [DATE]\
+
 ### start
 
 `./tasklog.py start [TASK_NAME]`
 
-[TASK_NAME] is the name of the task you want to track. It can be any string, within reason.
+[TASK_NAME] is the name of the task you want to track. It can be any string, within reason. If you want to use spaces in your task name, wrap it in quotes.
 
 A display will appear with a clock that counts up. You can:
 
@@ -45,11 +50,12 @@ A display will appear with a clock that counts up. You can:
 
 If you record a task multiple times in one day, the time will be cumulative.
 
-#### Example
+Example:
 
 `./tasklog.py start emails`\
 `./tasklog.py start coding`\
-`./tasklog.py start procrastination`
+`./tasklog.py start procrastination`\
+`./tasklog.py start "Q4 meeting"`
 
 ### ls
 
@@ -65,7 +71,7 @@ Shows details of what tasks you did on a day, and how long you spent on them. If
 
 [DATE] is an optional argument of the format `DD/MM/YYYY`, specifying which day you want to show details of. If you omit it, it will show details about todays tasks
 
-#### Example
+Example:
 
 `./tasklog show`\
 `./tasklog show 19/07/2018`\
