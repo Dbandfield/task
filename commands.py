@@ -71,7 +71,7 @@ def start(task_name):
         delta = datetime.now() - last_time
         last_time = datetime.now()
         if not paused:
-            timer += delta.total_seconds()
+            timer += delta.total_seconds()/60
             minutes = int(timer)
             minutes_txt = str(minutes) + " minutes"
 
