@@ -10,7 +10,7 @@ function setup_virtualenv
 function install_global_deps
 {
     sudo pip install virtualenv
-    setup_virtualenv()
+    setup_virtualenv
 }
 
 function install_local_deps

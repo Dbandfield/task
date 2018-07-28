@@ -1,253 +1,260 @@
+"""
+test_database.py
+
+Tests for database.py
+"""
+
+# core
+import datetime
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import database
-import pytest
-import mock
 import sqlite3
-import datetime
 
-def test_initDirectories(tmpdir):
+# project
+import database
+
+def test_init_directories(tmpdir):
 
     temp = tmpdir.mkdir("tmp")
-    newDir = os.path.join(temp, 'new')
-    database.DATA_DIR = newDir
-    database.initDirectories()
-    assert os.path.isdir(newDir)
+    new_dir = os.path.join(temp, 'new')
+    database.DATA_DIR = new_dir
+    database.init_directories()
+    assert os.path.isdir(new_dir)
 
 def test_connect(tmpdir):
 
     temp = tmpdir.mkdir("tmp")
-    newDir = os.path.join(temp, 'new')
-    database.DATA_DIR = newDir
+    new_dir = os.path.join(temp, 'new')
+    database.DATA_DIR = new_dir
     db = database.connect()
     assert type(db) is sqlite3.Connection
 
-def test_storeTask(tmpdir):
+def test_store_task(tmpdir):
 
     temp = tmpdir.mkdir("tmp")
 
     database.DBNAME = os.path.join(temp, 'task.db')
 
-    testData = database.TaskData('TEST', 10)
+    test_data = database.TaskData('TEST', 10)
     expected = (1, 'TEST', 10)
 
-    database.storeTask(testData)
+    database.store_task(test_data)
 
     # Now check database
-    checkPath = os.path.join(temp, "task.db")
-    checkDB = sqlite3.connect(checkPath)
-    checkTable = database.tableName()
-    checkCMD = ("""SELECT id, taskName, taskTime FROM """ + 
-                checkTable)
-    with checkDB:
-        cursor = checkDB.cursor()
-        cursor.execute(checkCMD)
+    check_path = os.path.join(temp, "task.db")
+    check_db = sqlite3.connect(check_path)
+    check_table = database.table_name()
+    check_cmd = ("""SELECT id, task_name, task_time FROM """ +
+                 check_table)
+    with check_db:
+        cursor = check_db.cursor()
+        cursor.execute(check_cmd)
         res = cursor.fetchall()
-    checkDB.close()
+    check_db.close()
 
     assert res[0] == expected
 
-def test_insertOrUpdateTask_insert(tmpdir):
+def test_insert_or_update_task_insert(tmpdir):
 
     temp = tmpdir.mkdir("tmp")
 
     database.DBNAME = os.path.join(temp, 'task.db')
 
-    testName = "TEST"
-    testTime = 10
+    test_name = "TEST"
+    test_time = 10
     expected = (1, 'TEST', 10)
 
-    database.insertOrUpdateTask(testName, testTime)
+    database.insert_or_update_task(test_name, test_time)
 
     # Now check database
-    checkPath = os.path.join(temp, "task.db")
-    checkDB = sqlite3.connect(checkPath)
-    checkTable = database.tableName()
-    checkCMD = ("""SELECT id, taskName, taskTime FROM """ + 
-                checkTable)
-    with checkDB:
-        cursor = checkDB.cursor()
-        cursor.execute(checkCMD)
+    check_path = os.path.join(temp, "task.db")
+    check_db = sqlite3.connect(check_path)
+    check_table = database.table_name()
+    check_cmd = ("""SELECT id, task_name, task_time FROM """ +
+                 check_table)
+    with check_db:
+        cursor = check_db.cursor()
+        cursor.execute(check_cmd)
         res = cursor.fetchall()
-    checkDB.close()
+    check_db.close()
 
     assert res[0] == expected
 
-def test_insertOrUpdateTask_update(tmpdir):
+def test_insert_or_update_task_update(tmpdir):
 
     temp = tmpdir.mkdir("tmp")
 
     database.DBNAME = os.path.join(temp, 'task.db')
 
-    testName = "TEST"
-    testTime = 10
-    testTimeUpdate = 11
+    test_name = "TEST"
+    test_time = 10
+    test_time_update = 11
     expected = (1, 'TEST', 11)
 
-    database.insertOrUpdateTask(testName, testTime)
-    database.insertOrUpdateTask(testName, testTimeUpdate)
+    database.insert_or_update_task(test_name, test_time)
+    database.insert_or_update_task(test_name, test_time_update)
 
     # Now check database
-    checkPath = os.path.join(temp, "task.db")
-    checkDB = sqlite3.connect(checkPath)
-    checkTable = database.tableName()
-    checkCMD = ("""SELECT id, taskName, taskTime FROM """ + 
-                checkTable)
-    with checkDB:
-        cursor = checkDB.cursor()
-        cursor.execute(checkCMD)
+    check_path = os.path.join(temp, "task.db")
+    check_db = sqlite3.connect(check_path)
+    check_table = database.table_name()
+    check_cmd = ("""SELECT id, task_name, task_time FROM """ +
+                 check_table)
+    with check_db:
+        cursor = check_db.cursor()
+        cursor.execute(check_cmd)
         res = cursor.fetchall()
-    checkDB.close()
+    check_db.close()
 
     assert res[0] == expected
 
-def test_getTaskTime(tmpdir):
+def test_get_task_time(tmpdir):
 
     temp = tmpdir.mkdir("tmp")
 
     database.DBNAME = os.path.join(temp, 'task.db')
 
-    testName = "TEST"
-    testTime = 10
+    test_name = "TEST"
+    test_time = 10
 
-    name = database.tableName()
+    name = database.table_name()
 
-    testDB = sqlite3.connect(database.DBNAME)
-    addTableCMD = ("""CREATE TABLE """ + name +
-                    """ (id INTEGER PRIMARY KEY, 
-                        taskName text, taskTime, int)""")
+    test_db = sqlite3.connect(database.DBNAME)
+    add_table_cmd = ("""CREATE TABLE """ + name +
+                     """ (id INTEGER PRIMARY KEY,
+                     task_name text, task_time, int)""")
 
-    addTaskCMD = ("""INSERT INTO """ + name +
-                    """(taskName, taskTime) VALUES(?, ?)""")
-    with testDB:
-        cursor = testDB.cursor()
-        cursor.execute(addTableCMD)
-        cursor.execute(addTaskCMD, (testName, testTime))
-    testDB.close()
+    add_task_cmd = ("""INSERT INTO """ + name +
+                    """(task_name, task_time) VALUES(?, ?)""")
+    with test_db:
+        cursor = test_db.cursor()
+        cursor.execute(add_table_cmd)
+        cursor.execute(add_task_cmd, (test_name, test_time))
+    test_db.close()
 
-    res = database.getTaskTime(testName)
+    res = database.get_task_time(test_name)
 
-    assert res[0] == testTime
+    assert res[0] == test_time
 
-def test_taskExists(tmpdir):
+def test_task_exists(tmpdir):
 
     temp = tmpdir.mkdir("tmp")
 
     database.DBNAME = os.path.join(temp, 'task.db')
 
-    testName = "TEST"
-    testTime = 10
+    test_name = "TEST"
+    test_time = 10
 
-    name = database.tableName()
+    name = database.table_name()
 
-    testDB = sqlite3.connect(database.DBNAME)
-    addTableCMD = ("""CREATE TABLE """ + name +
-                    """ (id INTEGER PRIMARY KEY, 
-                        taskName text, taskTime, int)""")
+    test_db = sqlite3.connect(database.DBNAME)
+    add_table_cmd = ("""CREATE TABLE """ + name +
+                     """ (id INTEGER PRIMARY KEY,
+                     task_name text, task_time, int)""")
 
-    addTaskCMD = ("""INSERT INTO """ + name +
-                    """(taskName, taskTime) VALUES(?, ?)""")
-    with testDB:
-        cursor = testDB.cursor()
-        cursor.execute(addTableCMD)
-        cursor.execute(addTaskCMD, (testName, testTime))
-    testDB.close()
+    add_task_cmd = ("""INSERT INTO """ + name +
+                    """(task_name, task_time) VALUES(?, ?)""")
+    with test_db:
+        cursor = test_db.cursor()
+        cursor.execute(add_table_cmd)
+        cursor.execute(add_task_cmd, (test_name, test_time))
+    test_db.close()
 
-    res = database.taskExists(testName)
+    res = database.task_exists(test_name)
 
     assert res
 
-def test_ensureTableExists(tmpdir):
+def test_ensure_table_exists(tmpdir):
 
     temp = tmpdir.mkdir("tmp")
     database.DBNAME = os.path.join(temp, 'task.db')
-    name = database.tableName()
+    name = database.table_name()
 
-    database.ensureTableExists(name)
+    database.ensure_table_exists(name)
 
     cmd = "SELECT name FROM sqlite_master WHERE type='table'"
 
-    testDB = sqlite3.connect(database.DBNAME)
+    test_db = sqlite3.connect(database.DBNAME)
 
-    with testDB:
-        cursor = testDB.cursor()
+    with test_db:
+        cursor = test_db.cursor()
         cursor.execute(cmd)
         res = cursor.fetchall()
-    testDB.close()
+    test_db.close()
 
 
     assert len(res) > 0
 
-def test_getDays(tmpdir):
+def test_get_days(tmpdir):
 
     temp = tmpdir.mkdir("tmp")
     database.DBNAME = os.path.join(temp, 'task.db')
     name = "DAY_01_01_2000"
     expected = "01/01/2000"
     cmd = ("""CREATE TABLE IF NOT EXISTS """ + name +
-            """ (id INTEGER PRIMARY KEY, taskName text, taskTime int)""")
+           """ (id INTEGER PRIMARY KEY, task_name text, task_time int)""")
 
-    testDB = sqlite3.connect(database.DBNAME)
+    test_db = sqlite3.connect(database.DBNAME)
 
-    with testDB:
-        cursor = testDB.cursor()
+    with test_db:
+        cursor = test_db.cursor()
         cursor.execute(cmd)
-    testDB.close()
+    test_db.close()
 
-    res = database.getDays()
+    res = database.get_days()
 
     assert res[0] == expected
 
-def test_getDateTasks(tmpdir):
+def test_get_date_tasks(tmpdir):
 
     temp = tmpdir.mkdir("tmp")
     database.DBNAME = os.path.join(temp, 'task.db')
     name = "DAY_01_01_2000"
     date = datetime.datetime.strptime(name, "DAY_%d_%m_%Y")
     cmd1 = ("""CREATE TABLE IF NOT EXISTS """ + name +
-            """ (id INTEGER PRIMARY KEY, taskName text, taskTime int)""")
-    cmd2 = ("""INSERT INTO """ + name + 
-            """ (taskName, taskTime) VALUES(?, ?)""")
-    expectedTask = "TEST_TASK"
-    expectedTime = 10
-    cmd2Values = (expectedTask, expectedTime)
+            """ (id INTEGER PRIMARY KEY, task_name text, task_time int)""")
+    cmd2 = ("""INSERT INTO """ + name +
+            """ (task_name, task_time) VALUES(?, ?)""")
+    expected_task = "TEST_TASK"
+    expected_time = 10
+    cmd2_values = (expected_task, expected_time)
 
-    testDB = sqlite3.connect(database.DBNAME)
+    test_db = sqlite3.connect(database.DBNAME)
 
-    with testDB:
-        cursor = testDB.cursor()
+    with test_db:
+        cursor = test_db.cursor()
         cursor.execute(cmd1)
-        cursor.execute(cmd2, cmd2Values)
-    testDB.close()
+        cursor.execute(cmd2, cmd2_values)
+    test_db.close()
 
-    expectedObject = database.TaskData(expectedTask,
-                                        expectedTime)
-    ret = database.getDateTasks(date)
-    assert ret[0] == expectedObject
+    expected_object = database.TaskData(expected_task,
+                                        expected_time)
+    ret = database.get_date_tasks(date)
+    assert ret[0] == expected_object
 
-def test_removeDay(tmpdir):
+def test_remove_day(tmpdir):
 
     temp = tmpdir.mkdir("tmp")
     database.DBNAME = os.path.join(temp, 'task.db')
     name = "DAY_01_01_2000"
     date = datetime.datetime.strptime(name, "DAY_%d_%m_%Y")
     cmd1 = ("""CREATE TABLE IF NOT EXISTS """ + name +
-            """ (id INTEGER PRIMARY KEY, taskName text, taskTime int)""")
+            """ (id INTEGER PRIMARY KEY, task_name text, task_time int)""")
     cmd2 = ("""SELECT name FROM sqlite_master WHERE type='table'""")
 
-    testDB = sqlite3.connect(database.DBNAME)
+    test_db = sqlite3.connect(database.DBNAME)
 
-    with testDB:
-        cursor = testDB.cursor()
+    with test_db:
+        cursor = test_db.cursor()
         cursor.execute(cmd1)
 
-    database.removeDay(date)
+    database.remove_day(date)
 
-    with testDB:
-        cursor = testDB.cursor()
+    with test_db:
+        cursor = test_db.cursor()
         cursor.execute(cmd2)
         ret = cursor.fetchall()
-    testDB.close()
+    test_db.close()
 
     assert len(ret) == 0

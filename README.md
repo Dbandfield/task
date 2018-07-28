@@ -1,4 +1,4 @@
-# TASK
+# TASKLOG
 
 ## What is this?
 
@@ -43,11 +43,13 @@ A display will appear with a clock that counts up. You can:
 * Press p to pause the timer and again to restart
 * Press q to exit without comitting to file
 
+If you record a task multiple times in one day, the time will be cumulative.
+
 #### Example
 
 `./tasklog.py start emails`\
 `./tasklog.py start coding`\
-`./tasklog.py start procrastination`\
+`./tasklog.py start procrastination`
 
 ### ls
 
@@ -59,7 +61,7 @@ Prints out which days you have recorded tasks on.
 
 `./tasklog.py show [DATE]`
 
-Shows details of what tasks you did on a day, and how long you spent on them.
+Shows details of what tasks you did on a day, and how long you spent on them. If a task was done multiple times, the time shown will be the total time.
 
 [DATE] is an optional argument of the format `DD/MM/YYYY`, specifying which day you want to show details of. If you omit it, it will show details about todays tasks
 
@@ -67,7 +69,7 @@ Shows details of what tasks you did on a day, and how long you spent on them.
 
 `./tasklog show`\
 `./tasklog show 19/07/2018`\
-`./tasklog show 01/11/1973`\
+`./tasklog show 01/11/1973`
 
 ### rm
 
@@ -80,7 +82,7 @@ This removes from file details about the specified day.
 #### Example
 
 `./tasklog rm 19/07/2018`\
-`./tasklog rm 01/11/1973`\
+`./tasklog rm 01/11/1973`
 
 ## Testing
 
