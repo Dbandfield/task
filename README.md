@@ -9,19 +9,9 @@ This is a test application written in Python which keeps track of how much time 
 This has only been tested on Arch Linux 64bit. It should work on Mac, but probably will not work on Windows (because of the bash scripts and the curses library).
 
 * Python 3 [Get it here](https://www.python.org/getit/)
-* virtualenv. This allows packages to be installed local to a project. Run `./util.sh install_global_dependencies` to install it. This uses `sudo`, so feel free to take a look at the file before running it.
+* virtualenv. This allows packages to be installed local to a project. Run `./util.sh install_global_deps` to install it. This uses `sudo`, so feel free to take a look at the file before running it.
 
-All other dependencies are local to the project and can be installed by running `./util.sh install_local_dependencies`. For reference these are:
-
-* atomicwrites==1.1.5
-* attrs==18.1.0
-* mock==2.0.0
-* more-itertools==4.2.0
-* pbr==4.2.0
-* pluggy==0.6.0
-* py==1.5.4
-* pytest==3.6.3
-* six==1.11.0
+All other dependencies are local to the project and can be installed by running `./util.sh install_local_deps`. 
 
 ### virtualenv setup
 
@@ -31,10 +21,10 @@ If you did not install virtualenv from `util.sh` you will also need to set it up
 
 There are four commands
 
-./tasklog.py start [TASK_NAME]\
-./tasklog.py ls\
-./tasklog.py show [DATE]\
-./tasklog.py rm [DATE]\
+`./tasklog.py start [TASK_NAME]`\
+`./tasklog.py ls`\
+`./tasklog.py show [DATE]`\
+`./tasklog.py rm [DATE]`
 
 ### start
 

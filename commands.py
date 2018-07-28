@@ -3,8 +3,10 @@ commands.py
 
 This contains the bulk of the logic for executing the
 commands. Curses and sqlite3 specifics are kept in
-separate files.
+separate files (display.py and database.py respectively).
 
+get_minutes_seconds(seconds_in) -- convert seconds to minutes and seconds
+make_time_string(seconds_in) -- convert seconds to a string of minutes and seconds
 start(task_name) -- displays countdown for task and handles user input
 ls() -- prints out the date of day where a task has been recorded
 show(date_str) -- shows information on tasks done for a specified day
@@ -15,10 +17,48 @@ rm(date_str) -- removes all information about a particular day
 from time import sleep
 import sys
 from datetime import datetime
+import logging
 
 # project
 import display
 import database
+
+# Logging
+LOG_FORMAT = '%(asctime)-15s %(message)s'
+logging.basicConfig(level=logging.DEBUG, filename="task.log", format=LOG_FORMAT)
+
+def get_minutes_seconds(seconds_in):
+    """
+    Provide seconds as an integer.
+
+    Convert to minutes and remainder seconds,
+    returned as two separate integers
+    """
+
+    minutes = int(seconds_in/60)
+    seconds_out = int(seconds_in % 60)
+
+    return minutes, seconds_out
+
+def make_time_string(seconds_in):
+    """
+    Provide seconds as an integer.
+
+    Returns a string representing that number as minutes
+    and remainder seconds. If minutes is 0 then just seconds
+    will be shown
+    """
+
+    minutes, seconds = get_minutes_seconds(seconds_in)
+
+    if minutes == 0:
+        minString = ""
+    elif minutes == 1:
+        minString = str(minutes) + " minute and "
+    else:
+        minString = str(minutes) + " minutes and "
+
+    return minString + str(seconds) + " seconds"
 
 def start(task_name):
     """
@@ -71,11 +111,9 @@ def start(task_name):
         delta = datetime.now() - last_time
         last_time = datetime.now()
         if not paused:
-            timer += delta.total_seconds()/60
-            minutes = int(timer)
-            minutes_txt = str(minutes) + " minutes"
+            timer += delta.total_seconds()
 
-        time_text.txt = minutes_txt
+        time_text.txt = make_time_string(timer)
 
         # Update the text
         display.update(screen, elements)
@@ -97,7 +135,7 @@ def start(task_name):
         elif inp in ('KEY_ENTER', '\n', '\r'):
 
             # Commit to file
-            task_obj = database.TaskData(task_name, minutes)
+            task_obj = database.TaskData(task_name, timer)
             database.store_task(task_obj)
             display.end(screen)
             sys.exit(0)
@@ -111,7 +149,7 @@ def ls():
     """
     Print out the dates of every day when a task was recorded
 
-    Unlike start and show, this does not uses curses
+    Unlike start and show, this does not use curses
     """
 
     # Ensure directories exist
@@ -160,7 +198,13 @@ def show(date_str=None):
     else:
         header_start = "On " + date.strftime("%d/%m/%Y") + " "
 
-    header = (header_start + "you did the following tasks: ")
+    # there are tasks to display
+    if len(tasks) > 0:
+        header = header_start + "you did the following tasks: "
+    # there are no tasks to display
+    else:
+        header = header_start + "you did no tasks."
+
     header_text = display.TextElement(header, prio)
     prio += 1
     elements.append(header_text)
@@ -169,8 +213,17 @@ def show(date_str=None):
     prio += 1
     elements.append(break1)
 
+    # get total time spent on all tasks
+    total_time = sum([t.time for t in tasks])
+
     for t in tasks:
-        txt = t.name + " for " + str(t.time) + " minutes"
+        # Time taken as percentage of total
+        # spent on all tasks this day
+        percent = round(t.time / total_time * 100)
+
+        txt = t.name + " for "
+        txt += make_time_string(t.time)
+        txt += " - " + str(percent) + "%"
         elements.append(display.TextElement(txt, prio))
         prio += 1
 

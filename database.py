@@ -318,7 +318,7 @@ class TaskData:
     """
     A simple class to hold data on a task.
     it has two properties:
-    name -- any reasonable string, naming a task
+    name -- a string, naming a task
     time -- an int for how long was spent on the task,
     in minutes
     """
@@ -326,9 +326,9 @@ class TaskData:
     def __init__(self, name, time):
 
         if not isinstance(name, str):
-            raise TypeError("TaskData constructor name argument should be a string")
-        if not isinstance(time, int):
-            raise TypeError("TaskData constructor time argument should be a positive int")
+            raise TypeError("TaskData name should be a string")
+        if not (isinstance(time, int) or isinstance(time, float)):
+            raise TypeError("TaskData time should be a number")
         if time < 0:
             raise ValueError("TaskData time should non-negative")
 
