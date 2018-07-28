@@ -6,12 +6,13 @@ This is a test application written in Python which keeps track of how much time 
 
 ## Requirements
 
-This has only been tested on Arch Linux 64bit. It should work on Mac, but probably will not work on Windows (because of the bash scripts and the curses library).
+This has only been tested on Arch Linux 64bit using Python 3.6.5. It should work on Mac, but probably will not work on Windows (because of the bash scripts and the curses library).
 
-* Python 3 [Get it here](https://www.python.org/getit/)
+* Python 3 [Get it here](https://www.python.org/getit/). Only version 3.6.5 has been tested with this application.
+* PIP. You should have it already if you have a recent Python version, see [here](https://pip.pypa.io/en/stable/installing/) if you don't or are not sure
 * virtualenv. This allows packages to be installed local to a project. Run `./util.sh install_global_deps` to install it. This uses `sudo`, so feel free to take a look at the file before running it.
 
-All other dependencies are local to the project and can be installed by running `./util.sh install_local_deps`. 
+All other dependencies are local to the project and can be installed by running `./util.sh install_local_deps`.
 
 ### virtualenv setup
 
@@ -75,7 +76,7 @@ This removes from file details about the specified day.
 
 [DATE] is required and is in the format `DD/MM/YYYY`. It specifies which day you want to remove.
 
-#### Example
+Example
 
 `./tasklog rm 19/07/2018`\
 `./tasklog rm 01/11/1973`
