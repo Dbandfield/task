@@ -58,7 +58,7 @@ def title(scr):
     Add a title to the window
     """
 
-    title_txt = "Task Tracker"
+    title_txt = "TASKLOG"
 
     scr.addstr(0, 0, title_txt)
 
