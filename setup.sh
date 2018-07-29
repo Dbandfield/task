@@ -2,6 +2,13 @@
 
 set -eo pipefail
 
+function install
+{
+    install_global_deps
+    install_local_deps
+    setup_virtualenv
+}
+
 function setup_virtualenv
 {
     virtualenv venv
@@ -10,7 +17,6 @@ function setup_virtualenv
 function install_global_deps
 {
     sudo pip install virtualenv
-    setup_virtualenv
 }
 
 function install_local_deps
