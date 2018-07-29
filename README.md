@@ -4,9 +4,11 @@
 
 This is a test application written in Python which keeps track of how much time you spend on tasks.
 
-## Requirements
+## Setup
 
-This has only been tested on Arch Linux 64bit using Python 3.6.5. It should work on Mac, but probably will not work on Windows (because of the bash scripts and the curses library). if `./tasklog` does not work you can try `./tasklog.py`.
+### Requirements
+
+This has only been tested on Arch Linux 64bit using Python 3.6.5. It should work on Mac, but will not work on Windows without modifications and extra modules.
 
 * Python 3 [Get it here](https://www.python.org/getit/). Only version 3.6.5 has been tested with this application.
 * PIP. You should have it already if you have a recent Python version, see [here](https://pip.pypa.io/en/stable/installing/) if you don't or are not sure
@@ -84,3 +86,7 @@ Example
 ## Testing
 
 Testing uses pytest. Run `./setup.sh test` to start.
+
+## Troubleshooting
+
+If `./tasklog` does not work you can try `./tasklog.py`. The former is just a symlink to the latter.
