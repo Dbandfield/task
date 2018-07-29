@@ -12,13 +12,10 @@ This has only been tested on Arch Linux 64bit using Python 3.6.5. It should work
 
 * Python 3 [Get it here](https://www.python.org/getit/). Only version 3.6.5 has been tested with this application.
 * PIP. You should have it already if you have a recent Python version, see [here](https://pip.pypa.io/en/stable/installing/) if you don't or are not sure
-* virtualenv. This allows packages to be installed local to a project. Run `./setup.sh install_global_deps` to install it. This uses `sudo`, so feel free to take a look at the file before running it.
 
-All other dependencies are local to the project and can be installed by running `./setup.sh install_local_deps`.
+To install the rest of the dependencies run the setup script. It uses `sudo` so feel free to inspect the file before running.
 
-### virtualenv setup
-
-If you did not install virtualenv from `setup.sh` you will also need to set it up by running `./setup.sh setup_virtualenv`
+`./setup.sh install`
 
 ## Usage
 
