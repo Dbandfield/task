@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-tasklog.py
+tasklog
 
 The entry script. It handles arguments, and then
 calls the appropriate function from commands.py
