@@ -22,14 +22,14 @@ If you did not install virtualenv from `setup.sh` you will also need to set it u
 
 There are four commands
 
-`./tasklog.py start [TASK_NAME]`\
-`./tasklog.py ls`\
-`./tasklog.py show [DATE]`\
-`./tasklog.py rm [DATE]`
+`./tasklog start [TASK_NAME]`\
+`./tasklog ls`\
+`./tasklog show [DATE]`\
+`./tasklog rm [DATE]`
 
 ### start
 
-`./tasklog.py start [TASK_NAME]`
+`./tasklog start [TASK_NAME]`
 
 [TASK_NAME] is the name of the task you want to track. It can be any string, within reason. If you want to use spaces in your task name, wrap it in quotes.
 
@@ -43,20 +43,20 @@ If you record a task multiple times in one day, the time will be cumulative.
 
 Example:
 
-`./tasklog.py start emails`\
-`./tasklog.py start coding`\
-`./tasklog.py start procrastination`\
-`./tasklog.py start "Q4 meeting"`
+`./tasklog start emails`\
+`./tasklog start coding`\
+`./tasklog start procrastination`\
+`./tasklog start "Q4 meeting"`
 
 ### ls
 
-`./tasklog.py ls`
+`./tasklog ls`
 
 Prints out which days you have recorded tasks on.
 
 ### show
 
-`./tasklog.py show [DATE]`
+`./tasklog show [DATE]`
 
 Shows details of what tasks you did on a day, and how long you spent on them. If a task was done multiple times, the time shown will be the total time.
 
@@ -70,7 +70,7 @@ Example:
 
 ### rm
 
-`./tasklog.py rm [DATE]`
+`./tasklog rm [DATE]`
 
 This removes from file details about the specified day.
 
