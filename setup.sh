@@ -5,8 +5,8 @@ set -eo pipefail
 function install
 {
     install_global_deps
-    install_local_deps
     setup_virtualenv
+    install_local_deps
 }
 
 function setup_virtualenv
