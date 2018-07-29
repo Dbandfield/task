@@ -12,15 +12,20 @@ ls(a) -- handle ls command
 show(a) -- handle show command
 rm(a) -- handle rm command
 """
-
+# Python Core
+import sys
 import os
 # auto-run virtualenv
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 ACTIVATE = os.path.join(THIS_DIR, 'venv/bin/activate_this.py')
-exec(open(ACTIVATE).read())
-
-# Python Core
-import sys
+try:
+    exec(open(ACTIVATE).read())
+except FileNotFoundError as err:
+    # If file not found, it likely means virtualenv
+    # was never setup, so request user to run the 
+    # setup script
+    print("Please run ./setup.sh install")
+    sys.exit(1)
 
 # Third party
 import argparse
